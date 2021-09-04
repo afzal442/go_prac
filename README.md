@@ -1,3 +1,3 @@
-# Community Template Repo
+# GO_Prac
 
-Template repo with docs and GitHub Actions etc, to create other projects.
+Contains examples of GOlang concepts.
