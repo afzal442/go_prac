@@ -14,6 +14,12 @@ type album struct {
 	Price  float64 `json:"price"`
 }
 
+type nwalbum struct {
+	Title  string  `json:"title"`
+	Artist string  `json:"artist"`
+	Price  float64 `json:"price"`
+}
+
 // albums slice to seed record album data.
 var albums = []album{
 	{ID: "1", Title: "Blue Train", Artist: "John Coltrane", Price: 56.99},
@@ -26,13 +32,38 @@ func main() {
 	router.GET("/albums", getAlbums)
 	router.GET("/albums/:id", getAlbumByID)
 	router.POST("/albums", postAlbums)
+	router.PUT("/albums/:id", putData)
 
-	router.Run("localhost:8080")
+	router.Run("localhost:5000")
 }
 
 // getAlbums responds with the list of all albums as JSON.
 func getAlbums(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, albums)
+}
+
+func putData(c *gin.Context) {
+	var newAlbum nwalbum
+	id := c.Param("id")
+
+	// Call BindJSON to bind the received JSON to
+	// newAlbum.
+	if err := c.BindJSON(&newAlbum); err != nil {
+		return
+	}
+
+	for _, a := range albums {
+		if a.ID == id {
+			a.Title = newAlbum.Title
+			a.Artist = newAlbum.Artist
+			a.Price = newAlbum.Price
+			c.IndentedJSON(http.StatusCreated, a)
+			return
+		}
+	}
+
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
+
 }
 
 // postAlbums adds an album from JSON received in the request body.
@@ -45,7 +76,6 @@ func postAlbums(c *gin.Context) {
 		return
 	}
 
-	// Add the new album to the slice.
 	albums = append(albums, newAlbum)
 	c.IndentedJSON(http.StatusCreated, newAlbum)
 }

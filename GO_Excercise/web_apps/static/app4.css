@@ -1,0 +1,27 @@
+body {
+  min-height: 150%;
+  background-image: url("mountain-adventure-sunset-sunrise.jpg");
+  background-blend-mode: overlay;
+  background-size: cover;
+}
+
+.welcome {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 2rem;
+  color: rgb(153, 175, 153);
+}
+
+#trans {
+  color: blueviolet;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.center {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
