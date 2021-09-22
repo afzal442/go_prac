@@ -8,18 +8,19 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type Album struct {
-	ID     int64
-	Title  string
-	Artist string
-	Price  float32
+type Employee struct {
+	Emp_id     int
+	Emp_name   string
+	Emp_age    int
+	Emp_dep    string
+	Emp_sub_id int
 }
 
 // var db *sql.DB
 
 func main() {
 	// Capture connection properties.
-	db, err := sql.Open("mysql", "root:hiclass@12@/kloud1")
+	db, err := sql.Open("mysql", "root:hiclass@12@/db_org2")
 
 	// Get a database handle.
 	if err != nil {
@@ -33,80 +34,121 @@ func main() {
 	fmt.Println("Connected!")
 
 	// Create a new record.
-	albums, err := albumsByArtist("John Coltrane", db)
+	emp_details, err := Emp_details("Ravi", db)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("Albums found: %v\n", albums)
+	fmt.Printf("Emp_details found: %v\n", emp_details)
 
 	// Hard-code ID 2 here to test the query.
-	alb, err := albumByID(5, db)
+	emp, err := Emp_detailsByID(4, db)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("Album found: %v\n", alb)
+	fmt.Printf("Employee found: %v %v\n", emp.Emp_name, emp.Emp_age)
 
-	albID, err := addAlbum(Album{
-		Title:  "The Modern Sound of Betty Carter",
-		Artist: "Betty Carter",
-		Price:  49.99,
-	}, db)
-	if err != nil {
-		log.Fatal(err)
+	// emp_detail, err := addEmployee(Employee{
+	// 	Emp_id:   7,
+	// 	Emp_name: "Satish",
+	// 	Emp_age:  45,
+	// 	Emp_dep:  "Management",
+	// }, db)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Printf("Details of added album: %v\n", emp_detail)
+
+	rowsAffected, err2 := EmpUpdate(db, 2)
+	if err2 != nil {
+		fmt.Println(err2)
+	} else {
+		fmt.Println("Rows Affected:", rowsAffected)
 	}
-	fmt.Printf("ID of added album: %v\n", albID)
+
+	// rows, err := db.Query("SELECT * FROM album; SELECT * FROM song;")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// defer rows.Close()
+
+	// // Loop through the first result set.
+	// for rows.Next() {
+	// 	// Handle result set.
+	// }
+
+	// 	// Advance to next result set.
+	// 	rows.NextResultSet()
+
+	// 	// Loop through the second result set.
+	// 	for rows.Next() {
+	// 		// Handle second set.
+	// 	}
+
+	// 	// Check for any error in either result set.
+	// 	if err := rows.Err(); err != nil {
+	// 		log.Fatal(err)
+	// 	}
 }
 
 // albumsByArtist queries for albums that have the specified artist name.
-func albumsByArtist(artist_name string, db *sql.DB) ([]Album, error) {
+func Emp_details(emp_name string, db *sql.DB) ([]Employee, error) {
 	// An albums slice to hold data from returned rows.
-	var albums []Album
+	var emp_details []Employee
 
-	rows, err := db.Query("SELECT * FROM album WHERE artist = ?", artist_name)
+	rows, err := db.Query("SELECT * FROM org_kloudone WHERE Emp_name = ?", emp_name)
 	if err != nil {
-		return nil, fmt.Errorf("albumsByArtist %q: %v", artist_name, err)
+		return nil, fmt.Errorf("Emp_detailsbyname %q: %v", emp_name, err)
 	}
 	defer rows.Close()
 	// Loop through rows, using Scan to assign column data to struct fields.
 	for rows.Next() {
-		var alb Album
-		if err := rows.Scan(&alb.ID, &alb.Title, &alb.Artist, &alb.Price); err != nil {
-			return nil, fmt.Errorf("albumsByArtist %q: %v", artist_name, err)
+		var emp_d Employee
+		if err := rows.Scan(&emp_d.Emp_id, &emp_d.Emp_name, &emp_d.Emp_age, &emp_d.Emp_dep, &emp_d.Emp_sub_id); err != nil {
+			return nil, fmt.Errorf("Emp_detailsbyname %q: %v", emp_name, err)
 		}
-		albums = append(albums, alb)
+		emp_details = append(emp_details, emp_d)
 	}
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("albumsByArtist %q: %v", artist_name, err)
+		return nil, fmt.Errorf("Emp_detailsbyname %q: %v", emp_name, err)
 	}
-	return albums, nil
+	return emp_details, nil
 }
 
 // albumByID queries for the album with the specified ID.
-func albumByID(id int64, db *sql.DB) (Album, error) {
+func Emp_detailsByID(id int64, db *sql.DB) (Employee, error) {
 	// An album to hold data from the returned row.
-	var alb Album
+	var emp Employee
 
-	row := db.QueryRow("SELECT * FROM album WHERE id = ?", id)
-	if err := row.Scan(&alb.ID, &alb.Title, &alb.Artist, &alb.Price); err != nil {
+	row := db.QueryRow("SELECT * FROM org_kloudone WHERE Emp_id = ?", id)
+	if err := row.Scan(&emp.Emp_id, &emp.Emp_name, &emp.Emp_age, &emp.Emp_dep, &emp.Emp_sub_id); err != nil {
 		if err == sql.ErrNoRows {
-			return alb, fmt.Errorf("albumsById %d: no such album", id)
+			return emp, fmt.Errorf("Emp_detailsByID %d: no such employee details", id)
 		}
-		return alb, fmt.Errorf("albumsById %d: %v", id, err)
+		return emp, fmt.Errorf("Emp_detailsByID %d: %v", id, err)
 	}
-	return alb, nil
+	return emp, nil
 }
 
-// addAlbum adds the specified album to the database,
-// returning the album ID of the new entry
-func addAlbum(alb Album, db *sql.DB) (int64, error) {
+// addEmployee adds the specified Employee to the database,
+// returning the Employee ID of the new entry
+func addEmployee(emp Employee, db *sql.DB) (int, error) {
 
-	result, err := db.Exec("INSERT INTO album (title, artist, price) VALUES (?, ?, ?)", alb.Title, alb.Artist, alb.Price)
+	result, err := db.Exec("INSERT INTO org_kloudone (Emp_id, Emp_name, Emp_age, Emp_dep) VALUES (?, ?, ?, ?)", emp.Emp_id, emp.Emp_name, emp.Emp_age, emp.Emp_dep)
 	if err != nil {
-		return 0, fmt.Errorf("addAlbum: %v", err)
+		return 0, fmt.Errorf("addEmployee: %v", err)
 	}
 	id, err := result.LastInsertId()
 	if err != nil {
-		return 0, fmt.Errorf("addAlbum: %v", err)
+		return 0, fmt.Errorf("addEmployee: %v %v", id, err)
 	}
-	return id, nil
+	return emp.Emp_id, nil
+}
+
+func EmpUpdate(db *sql.DB, emp_id int) (int64, error) {
+	result, err := db.Exec("update org_kloudone set Emp_name = 'Vijay', Emp_age = 34 where Emp_id = ?", 2)
+	if err != nil {
+		return 0, err
+	} else {
+		return result.RowsAffected()
+	}
 }
