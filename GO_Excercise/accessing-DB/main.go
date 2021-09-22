@@ -47,16 +47,16 @@ func main() {
 	}
 	fmt.Printf("Employee found: %v %v\n", emp.Emp_name, emp.Emp_age)
 
-	// emp_detail, err := addEmployee(Employee{
-	// 	Emp_id:   7,
-	// 	Emp_name: "Satish",
-	// 	Emp_age:  45,
-	// 	Emp_dep:  "Management",
-	// }, db)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// fmt.Printf("Details of added album: %v\n", emp_detail)
+	emp_detail, err := addEmployee(Employee{
+		Emp_id:   7,
+		Emp_name: "Satish",
+		Emp_age:  45,
+		Emp_dep:  "Management",
+	}, db)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Details of added album: %v\n", emp_detail)
 
 	rowsAffected, err2 := EmpUpdate(db, 2)
 	if err2 != nil {
