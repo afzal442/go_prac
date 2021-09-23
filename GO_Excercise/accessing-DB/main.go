@@ -56,7 +56,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("Details of added album: %v\n", emp_detail)
+	fmt.Printf("Details of added emp_details: %v\n", emp_detail)
 
 	rowsAffected, err2 := EmpUpdate(db, 2)
 	if err2 != nil {
