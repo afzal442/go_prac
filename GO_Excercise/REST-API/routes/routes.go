@@ -8,13 +8,13 @@ import (
 	"REST-API/handlers"
 )
 
-func initializeRoutes() {
+func InitializeRoutes() {
 
 	router := gin.Default()
 
 	// Handle the routes
-	router.GET("/articles", handlers.getArticles)
-	router.GET("/articles/:id", handlers.getArtByID)
-	router.POST("/articles", handlers.postArticles)
-	router.PUT("/articles/:id", handlers.putData)
+	router.GET("/articles", handlers.GetArticles)
+	router.GET("/articles/:id", handlers.GetArtByID)
+	router.POST("/articles", handlers.PostArticles)
+	router.PUT("/articles/:id", handlers.PutData)
 }

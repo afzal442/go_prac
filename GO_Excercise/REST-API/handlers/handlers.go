@@ -28,11 +28,11 @@ var articles = []article{
 }
 
 // getarticles responds with the list of all articles as JSON.
-func getArticles(c *gin.Context) {
+func GetArticles(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, articles)
 }
 
-func putData(c *gin.Context) {
+func PutData(c *gin.Context) {
 	var newarticle nwarticle
 	id := c.Param("id")
 
@@ -57,7 +57,7 @@ func putData(c *gin.Context) {
 }
 
 // postarticles adds an article from JSON received in the request body.
-func postArticles(c *gin.Context) {
+func PostArticles(c *gin.Context) {
 	var newarticle article
 
 	// Call BindJSON to bind the received JSON to
@@ -72,7 +72,7 @@ func postArticles(c *gin.Context) {
 
 // getarticleByID locates the article whose ID value matches the id
 // parameter sent by the client, then returns that article as a response.
-func getArtByID(c *gin.Context) {
+func GetArtByID(c *gin.Context) {
 	id := c.Param("id")
 
 	// Loop through the list of articles, looking for
