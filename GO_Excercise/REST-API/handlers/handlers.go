@@ -22,14 +22,14 @@ type article struct {
 
 // articles slice to seed record article data.
 var articles = []article{
-	{ID: "1", Title: "Let's GO", Author: "John Coltrane", Price: 56.99},
+	{ID: "1", Title: "Let's GO", Author: "John Doe", Price: 56.99},
 	{ID: "2", Title: "the three mistakes of my life", Author: "Chetan", Price: 17.99},
 	{ID: "3", Title: "3 idiots", Author: "Bhagat", Price: 39.99},
 }
 
 // getarticles responds with the list of all articles as JSON.
 func GetArticles(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, articles)
+	c.JSON(http.StatusOK, articles)
 }
 
 func PutData(c *gin.Context) {
@@ -52,7 +52,7 @@ func PutData(c *gin.Context) {
 		}
 	}
 
-	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "article not found"})
+	c.IndentedJSON(http.StatusNotFound, gin.H{"error": "article not found"})
 
 }
 
