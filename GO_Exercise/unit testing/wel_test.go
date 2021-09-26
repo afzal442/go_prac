@@ -1,6 +1,7 @@
-package main
+package wel_test
 
 import (
+	"UT/wel"
 	"testing"
 )
 
@@ -18,7 +19,7 @@ func TestCal_power_of_x(t *testing.T) {
 	}
 
 	for _, tc := range testcases {
-		actual := Calc_power_of_x(tc.x, tc.y)
+		actual := wel.Calc_power_of_x(tc.x, tc.y)
 		if actual != tc.expected {
 			// t.Errorf("do_cal_power_of_x(%f, %f) = %f; expected %f", tc.x, tc.y, actual, tc.expected)
 			t.Fail()

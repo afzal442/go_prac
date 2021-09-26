@@ -1,4 +1,4 @@
-package main
+package wel
 
 import (
 	"math"
