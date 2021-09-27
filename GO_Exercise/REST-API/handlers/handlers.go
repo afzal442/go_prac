@@ -47,6 +47,7 @@ func PutData(c *gin.Context) {
 			a.Title = newarticle.Title
 			a.Author = newarticle.Author
 			a.Price = newarticle.Price
+			// IndentedJSON serializes the article into JSON
 			c.IndentedJSON(http.StatusCreated, a)
 			return
 		}

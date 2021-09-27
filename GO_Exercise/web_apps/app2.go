@@ -3,8 +3,9 @@ package main
 import (
 	"html/template"
 	"io/ioutil"
-	"log"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 type Page struct {
@@ -68,8 +69,14 @@ func editHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/view/", viewHandler)
-	http.HandleFunc("/edit/", editHandler)
-	http.HandleFunc("/save/", saveHandler)
-	log.Fatal(http.ListenAndServe(":3000", nil))
+	routes := mux.NewRouter().StrictSlash(true) // create a new router
+	routes.HandleFunc("/view/{title}", viewHandler)
+	routes.HandleFunc("/edit/{title}", editHandler)
+	routes.HandleFunc("/save/{title}", saveHandler)
+	http.ListenAndServe(":5000", routes) // start the web server on port 8080
+
+	// http.HandleFunc("/view/", viewHandler)
+	// http.HandleFunc("/edit/", editHandler)
+	// http.HandleFunc("/save/", saveHandler)
+	// log.Fatal(http.ListenAndServe(":3000", nil))
 }
