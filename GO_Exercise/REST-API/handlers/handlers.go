@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -71,6 +73,24 @@ func PostArticles(c *gin.Context) {
 	c.IndentedJSON(http.StatusCreated, newarticle)
 }
 
+func CreateArticles(w http.ResponseWriter, r *http.Request) {
+	var newarticle article
+	// Call BindJSON to bind the received JSON to
+	// newarticle.
+	// if err := json.NewDecoder(r.Body).Decode(&newarticle); err != nil {
+	// 	return
+	// }
+
+	// get the body of POST request
+	// unmarshal this into a new Article struct
+	// append this to our Articles array.
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	json.Unmarshal(reqBody, &newarticle)
+
+	articles = append(articles, newarticle)
+	json.NewEncoder(w).Encode(newarticle)
+}
+
 // getarticleByID locates the article whose ID value matches the id
 // parameter sent by the client, then returns that article as a response.
 func GetArtByID(c *gin.Context) {
@@ -81,6 +101,19 @@ func GetArtByID(c *gin.Context) {
 	for _, a := range articles {
 		if a.ID == id {
 			c.IndentedJSON(http.StatusOK, a)
+			return
+		}
+	}
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "article not found"})
+}
+
+func DeleteData(c *gin.Context) {
+	id := c.Param("id")
+
+	for index, a := range articles {
+		if a.ID == id {
+			articles = append(articles[:index], articles[index+1:]...)
+			c.IndentedJSON(http.StatusOK, gin.H{"message": "article deleted"})
 			return
 		}
 	}

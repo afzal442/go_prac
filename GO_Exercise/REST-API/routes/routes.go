@@ -17,5 +17,6 @@ func InitializeRoutes() *gin.Engine {
 	router.GET("/articles/:id", handlers.GetArtByID)
 	router.POST("/articles", handlers.PostArticles)
 	router.PUT("/articles/:id", handlers.PutData)
+	router.DELETE("/articles/:id", handlers.DeleteData)
 	return router
 }
