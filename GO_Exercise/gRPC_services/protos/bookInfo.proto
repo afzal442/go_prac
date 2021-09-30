@@ -1,6 +1,8 @@
-syntax = "proto3";
+// this generates the implementation of the interface for the class
+// maps you how to handle the other methods that you define for your service to the 
+// server
 
-package gRPC_services;
+syntax = "proto3";
 
 option go_package = "./;bookInfo";
 

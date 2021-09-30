@@ -5,8 +5,8 @@ package bookInfo
 import (
 	context "context"
 	grpc "google.golang.org/grpc"
-	codes "google.golang.org/grpc/codes"
-	status "google.golang.org/grpc/status"
+	// codes "google.golang.org/grpc/codes"
+	// status "google.golang.org/grpc/status"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -45,24 +45,24 @@ func (c *bookInfoClient) GetRate(ctx context.Context, in *RateRequest, opts ...g
 type BookInfoServer interface {
 	// GetRate returns the exchange rate for the two provided currency codes
 	GetRate(context.Context, *RateRequest) (*RateResponse, error)
-	mustEmbedUnimplementedBookInfoServer()
+	// mustEmbedUnimplementedBookInfoServer()
 }
 
 // UnimplementedBookInfoServer must be embedded to have forward compatible implementations.
-type UnimplementedBookInfoServer struct {
-}
+// type UnimplementedBookInfoServer struct {
+// }
 
-func (UnimplementedBookInfoServer) GetRate(context.Context, *RateRequest) (*RateResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetRate not implemented")
-}
-func (UnimplementedBookInfoServer) mustEmbedUnimplementedBookInfoServer() {}
+// func (UnimplementedBookInfoServer) GetRate(context.Context, *RateRequest) (*RateResponse, error) {
+// 	return nil, status.Errorf(codes.Unimplemented, "method GetRate not implemented")
+// }
+// func (UnimplementedBookInfoServer) mustEmbedUnimplementedBookInfoServer() {}
 
 // UnsafeBookInfoServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to BookInfoServer will
 // result in compilation errors.
-type UnsafeBookInfoServer interface {
-	mustEmbedUnimplementedBookInfoServer()
-}
+// type UnsafeBookInfoServer interface {
+// 	mustEmbedUnimplementedBookInfoServer()
+// }
 
 func RegisterBookInfoServer(s grpc.ServiceRegistrar, srv BookInfoServer) {
 	s.RegisterService(&BookInfo_ServiceDesc, srv)
@@ -99,5 +99,5 @@ var BookInfo_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "protos/hack.proto",
+	Metadata: "protos/bookInfo.proto",
 }
