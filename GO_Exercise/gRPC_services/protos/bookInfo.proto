@@ -25,3 +25,7 @@ message RateRequest {
 message RateResponse {
     float ratings = 1;
 }
+
+enum Ratings {
+    
+}

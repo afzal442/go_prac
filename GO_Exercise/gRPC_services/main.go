@@ -8,6 +8,8 @@ import (
 
 	"log"
 
+	"google.golang.org/grpc/reflection"
+
 	"google.golang.org/grpc"
 )
 
@@ -20,7 +22,9 @@ func main() {
 
 	bs := bookInfo_server.NewBookInfo(l)
 
-	// Register the server
+	reflection.Register(gs)
+
+	// Register BookInfo service with the server
 	pb.RegisterBookInfoServer(gs, bs)
 
 	lis, err := net.Listen("tcp", ":5000")
