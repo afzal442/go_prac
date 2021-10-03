@@ -23,9 +23,13 @@ message RateRequest {
 // rate which is a floating point number and can be used to convert between the 
 // two currencies specified in the request.
 message RateResponse {
-    float ratings = 1;
+    Ratings rating = 1;
 }
 
 enum Ratings {
-    
+    R1 = 0;
+    R2 = 1;
+    R3 = 2;
+    R4 = 3;
+    R5 = 4;
 }

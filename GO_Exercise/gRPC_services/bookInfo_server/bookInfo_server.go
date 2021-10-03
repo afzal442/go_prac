@@ -23,6 +23,6 @@ func (b *BookInfo) GetRate(ctx context.Context, xr *pb.RateRequest) (*pb.RateRes
 	// b.log.Info("Handle request for GetRate", "Article Name", xr.GetArticleName(), "Article Review", xr.GetArticleReview())
 	log.Printf("Received: ", "Article Name", xr.GetArticleName(), "Article Review", xr.GetArticleReview())
 
-	return &pb.RateResponse{Ratings: 4.5}, nil
+	return &pb.RateResponse{Rating: 3}, nil
 
 }
