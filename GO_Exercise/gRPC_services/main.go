@@ -22,10 +22,10 @@ func main() {
 
 	bs := bookInfo_server.NewBookInfo(l)
 
-	reflection.Register(gs)
-
 	// Register BookInfo service with the server
 	pb.RegisterBookInfoServer(gs, bs)
+
+	reflection.Register(gs)
 
 	lis, err := net.Listen("tcp", ":5000")
 	if err != nil {

@@ -12,6 +12,8 @@ type nwarticle struct {
 	Title  string  `json:"title"`
 	Author string  `json:"author"`
 	Price  float64 `json:"price"`
+	Review string  `json:"review"`
+	Rating float64 `json:"rating"`
 }
 
 // article represents data about a record article.
@@ -20,13 +22,15 @@ type article struct {
 	Title  string  `json:"title"`
 	Author string  `json:"author"`
 	Price  float64 `json:"price"`
+	Review string  `json:"review"`
+	Rating float64 `json:"rating"`
 }
 
 // articles slice to seed record article data.
 var articles = []article{
-	{ID: "1", Title: "Let's GO", Author: "John Doe", Price: 56.99},
-	{ID: "2", Title: "the three mistakes of my life", Author: "Chetan", Price: 17.99},
-	{ID: "3", Title: "3 idiots", Author: "Bhagat", Price: 39.99},
+	{ID: "1", Title: "Let's GO", Author: "John Doe", Price: 56.99, Review: "Very Good", Rating: 4},
+	{ID: "2", Title: "the three mistakes of my life", Author: "Chetan", Price: 17.99, Review: "Good", Rating: 3.5},
+	{ID: "3", Title: "3 idiots", Author: "Bhagat", Price: 39.99, Review: "Excellent", Rating: 5},
 }
 
 // getarticles responds with the list of all articles as JSON.

@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 type BookInfoClient interface {
 	// GetRate returns the exchange rate for the two provided currency codes
 	GetRate(ctx context.Context, in *RateRequest, opts ...grpc.CallOption) (*RateResponse, error)
+	SubscribeRate(ctx context.Context, opts ...grpc.CallOption) (BookInfo_SubscribeRateClient, error)
 }
 
 type bookInfoClient struct {
@@ -39,12 +40,44 @@ func (c *bookInfoClient) GetRate(ctx context.Context, in *RateRequest, opts ...g
 	return out, nil
 }
 
+func (c *bookInfoClient) SubscribeRate(ctx context.Context, opts ...grpc.CallOption) (BookInfo_SubscribeRateClient, error) {
+	stream, err := c.cc.NewStream(ctx, &BookInfo_ServiceDesc.Streams[0], "/bookInfo/SubscribeRate", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &bookInfoSubscribeRateClient{stream}
+	return x, nil
+}
+
+type BookInfo_SubscribeRateClient interface {
+	Send(*RateRequest) error
+	Recv() (*RateResponse, error)
+	grpc.ClientStream
+}
+
+type bookInfoSubscribeRateClient struct {
+	grpc.ClientStream
+}
+
+func (x *bookInfoSubscribeRateClient) Send(m *RateRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *bookInfoSubscribeRateClient) Recv() (*RateResponse, error) {
+	m := new(RateResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // BookInfoServer is the server API for BookInfo service.
 // All implementations must embed UnimplementedBookInfoServer
 // for forward compatibility
 type BookInfoServer interface {
 	// GetRate returns the exchange rate for the two provided currency codes
 	GetRate(context.Context, *RateRequest) (*RateResponse, error)
+	SubscribeRate(BookInfo_SubscribeRateServer) error
 	// mustEmbedUnimplementedBookInfoServer()
 }
 
@@ -55,11 +88,14 @@ type BookInfoServer interface {
 // func (UnimplementedBookInfoServer) GetRate(context.Context, *RateRequest) (*RateResponse, error) {
 // 	return nil, status.Errorf(codes.Unimplemented, "method GetRate not implemented")
 // }
+// func (UnimplementedBookInfoServer) SubscribeRate(BookInfo_SubscribeRateServer) error {
+// 	return status.Errorf(codes.Unimplemented, "method SubscribeRate not implemented")
+// }
 // func (UnimplementedBookInfoServer) mustEmbedUnimplementedBookInfoServer() {}
 
-// UnsafeBookInfoServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to BookInfoServer will
-// result in compilation errors.
+// // UnsafeBookInfoServer may be embedded to opt out of forward compatibility for this service.
+// // Use of this interface is not recommended, as added methods to BookInfoServer will
+// // result in compilation errors.
 // type UnsafeBookInfoServer interface {
 // 	mustEmbedUnimplementedBookInfoServer()
 // }
@@ -86,6 +122,32 @@ func _BookInfo_GetRate_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BookInfo_SubscribeRate_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(BookInfoServer).SubscribeRate(&bookInfoSubscribeRateServer{stream})
+}
+
+type BookInfo_SubscribeRateServer interface {
+	Send(*RateResponse) error
+	Recv() (*RateRequest, error)
+	grpc.ServerStream
+}
+
+type bookInfoSubscribeRateServer struct {
+	grpc.ServerStream
+}
+
+func (x *bookInfoSubscribeRateServer) Send(m *RateResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *bookInfoSubscribeRateServer) Recv() (*RateRequest, error) {
+	m := new(RateRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // BookInfo_ServiceDesc is the grpc.ServiceDesc for BookInfo service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -98,6 +160,13 @@ var BookInfo_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _BookInfo_GetRate_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "SubscribeRate",
+			Handler:       _BookInfo_SubscribeRate_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "protos/bookInfo.proto",
 }
