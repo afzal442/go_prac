@@ -10,28 +10,28 @@ service bookInfo {
     // GetRate returns the exchange rate for the two provided currency codes 
     rpc GetRate(RateRequest) returns (RateResponse);
 
-    rpc SubscribeRate (stream RateRequest) returns (stream RateResponse);
+    // rpc SubscribeRate (stream RateRequest) returns (stream RateResponse);
 }
 
 // RateRequest defines the request for a GetRate call
 message RateRequest {
     // Base is the base currency code for the rate
-    string Article_name = 1;
+    string title = 1;
     // Destination is the destination currency code for the rate
-    string Article_review = 2;
+    string review = 2;
 }
 
 // RateResponse is the response from a GetRate call, it contains
 // rate which is a floating point number and can be used to convert between the 
 // two currencies specified in the request.
 message RateResponse {
-    Ratings rating = 1;
+    double rating = 1;
 }
 
-enum Ratings {
-    R1 = 0;
-    R2 = 1;
-    R3 = 2;
-    R4 = 3;
-    R5 = 4;
-}
+// enum Ratings {
+//     R1 = 0;
+//     R2 = 1;
+//     R3 = 2;
+//     R4 = 3;
+//     R5 = 4;
+// }

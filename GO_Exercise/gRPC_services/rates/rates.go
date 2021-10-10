@@ -11,21 +11,33 @@ import (
 
 type Rate struct {
 	log     *log.Logger
-	ratings map[string]string
+	ratings map[string]float64
 }
 
 func NewRate(l *log.Logger) (*Rate, error) {
 	df := &Rate{
-		log: l,
-		ratings: map[string]string{
-			"Good":      "3.5",
-			"Very Good": "4.0",
-			"Excellent": "5.0",
-		},
+		log:     l,
+		ratings: map[string]float64{},
 	}
-	err := df.GetRatings()
+	tr := df.GetRating()
 
-	return df, err
+	return df, tr
+}
+
+func (e *Rate) GetRatings(Article_name, Article_review string) (float64, error) {
+	br, ok := e.ratings[Article_name]
+	if !ok {
+		return 0, fmt.Errorf("rating not found for article %s", Article_name)
+	}
+
+	fmt.Println(Article_review, br)
+
+	dr, ok := e.ratings[Article_review]
+	if !ok {
+		return 0, fmt.Errorf("rating not found for article %s", Article_review)
+	}
+
+	return dr, nil
 }
 
 // func (r *Rate) GetRatings() error {
@@ -83,11 +95,11 @@ func NewRate(l *log.Logger) (*Rate, error) {
 // }
 
 type df struct {
-	Review string `json:"review"`
-	Rating string `json:"rating"`
+	Review string  `json:"review"`
+	Rating float64 `json:"rating"`
 }
 
-func (r *Rate) GetRatings() error {
+func (r *Rate) GetRating() error {
 	resp, err := http.DefaultClient.Get("http://localhost:5000/articles")
 	if err != nil {
 		return err
@@ -100,6 +112,8 @@ func (r *Rate) GetRatings() error {
 	md := &df{}
 
 	json.NewDecoder(resp.Body).Decode(&md)
+
+	fmt.Println(md.Rating)
 
 	for {
 		dt := md.Rating

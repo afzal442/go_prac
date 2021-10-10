@@ -2,9 +2,11 @@ package main
 
 import (
 	"net"
+	"os"
 
 	"gRPC/bookInfo_server"
 	pb "gRPC/protos/bookInfo"
+	"gRPC/rates"
 
 	"log"
 
@@ -17,10 +19,16 @@ func main() {
 
 	l := log.Default()
 
+	rate, err := rates.NewRate(l)
+	if err != nil {
+		log.Printf("Unable to generate rates", "error", err)
+		os.Exit(1)
+	}
+
 	// Create a new server
 	gs := grpc.NewServer()
 
-	bs := bookInfo_server.NewBookInfo(l)
+	bs := bookInfo_server.NewBookInfo(rate, l)
 
 	// Register BookInfo service with the server
 	pb.RegisterBookInfoServer(gs, bs)
