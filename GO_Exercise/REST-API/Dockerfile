@@ -1,12 +1,19 @@
-FROM golang:latest
+FROM golang:1.16-alpine
+
+# FROM golang:latest
 
 RUN mkdir /build
 WORKDIR /build
 
-RUN export GO111MODULE=on
+COPY go.mod .
+COPY go.sum .
 
-RUN cd /build/GO_PRAC/REST-API && go build
+RUN go mod download
 
-EXPOSE 8080
+COPY . .
 
-ENTRYPOINT [ "/build/GO_PRAC/REST-API/routes" ] 
+RUN go build -o /web4api
+
+EXPOSE 5000
+
+CMD [ "/web4api" ] 
