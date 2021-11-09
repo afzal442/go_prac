@@ -7,11 +7,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
 
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/go-sql-driver/mysql"
 
 	"github.com/gin-gonic/gin"
 )
@@ -68,7 +69,18 @@ var tn time.Time
 // var expirationTime time.Time
 
 func InitDatabase() {
-	db, err := sql.Open("mysql", "root:hiclass@12@/db1")
+	// Capture connection properties.
+	cfg := mysql.Config{
+		User:   os.Getenv("DB_USER"),
+		Passwd: os.Getenv("DB_PASSWORD"),
+		Net:    "tcp",
+		Addr:   "127.0.0.1:3306",
+		DBName: "db1",
+	}
+
+	// db, err := sql.Open("mysql", "root:hiclass@12@/db1")
+
+	db, err := sql.Open("mysql", cfg.FormatDSN())
 
 	// Get a database handle.
 	if err != nil {
