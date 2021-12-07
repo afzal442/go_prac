@@ -12,13 +12,13 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-type nwarticle struct {
-	Title  string  `json:"title"`
-	Author string  `json:"author"`
-	Price  float64 `json:"price"`
-	Review string  `json:"review"`
-	Rating float64 `json:"rating"`
-}
+// type nwarticle struct {
+// 	Title  string  `json:"title"`
+// 	Author string  `json:"author"`
+// 	Price  float64 `json:"price"`
+// 	Review string  `json:"review"`
+// 	Rating float64 `json:"rating"`
+// }
 
 // article represents data about a record article.
 type article struct {
